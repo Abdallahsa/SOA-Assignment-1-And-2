@@ -177,7 +177,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                     studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                     studentResponse.setGender(getElementValue(studentElement, "Gender"));
                     studentResponse.setGpa(studentGPA);
-                    studentResponse.setGender(getElementValue(studentElement, "Level"));
+                    studentResponse.setLevel(Integer.parseInt(getElementValue(studentElement, "Level")));
                     studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                     result.add(studentResponse);
@@ -225,7 +225,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                     studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                     studentResponse.setGender(getElementValue(studentElement, "Gender"));
                     studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
-                    studentResponse.setGender(getElementValue(studentElement, "Level"));
+                    studentResponse.setLevel(Integer.parseInt(getElementValue(studentElement, "Level")));
                     studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                     result.add(studentResponse);
