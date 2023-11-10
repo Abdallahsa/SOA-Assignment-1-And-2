@@ -2,30 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Search by First Name</title>
+    <title>Search by GPA</title>
     <link rel="stylesheet" href="searchName.css">
 </head>
 <body>
 
-<h2>Search by First Name</h2>
+<h2>Search by GPA</h2>
 
 <form id="searchForm">
-    <label>First Name:</label>
-    <input type="text" id="firstName" required><br>
+    <label>GPA:</label>
+    <input type="text" id="gpa" required><br>
 
-    <button type="button" onclick="searchByFirstName()">Search</button>
+    <button type="button" onclick="searchByGpa()">Search</button>
 </form>
 <br/>
 <div id="searchResults"></div>
 
 <script>
-    function searchByFirstName() {
+    function searchByGpa() {
         // Get form data
-        var firstName = document.getElementById("firstName").value;
+        var gpa = document.getElementById("gpa").value;
 
         // Make an AJAX request to your API endpoint
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/students/searchByFirstName?firstName=" + encodeURIComponent(firstName), true);
+        xhr.open("GET", "/students/searchByGPA?gpa=" +  encodeURIComponent(gpa), true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {

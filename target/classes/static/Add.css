@@ -1,12 +1,13 @@
-body{
-background-color:black
+#container
+{
+	text-align:center;
 }
 
-
-
-h2{
+body{
+	text-align:center;
+}
+h2, h3{
 text-align:center;
-color:white
 
 }
 
@@ -15,7 +16,6 @@ text-align:center
 }
 input{
 background-color:transparent;
-color:white;
 padding:8px;
 width:50%;
 margin-bottom:10px;
@@ -24,10 +24,12 @@ margin-bottom:10px;
 
 
 }
+
 button{
 padding:10px;
 width:8%;
 margin-top:20px;
 background-color:blue;
 color:white;
+
 }

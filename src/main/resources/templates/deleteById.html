@@ -1,0 +1,38 @@
+<!DocType html>
+<html>
+	<head>
+	<title>Delete by ID</title>
+	<link rel="stylesheet" href="searchName.css">
+	</head>
+	<body>
+	<h2>Delete by ID</h2>
+	
+	<form>
+        <label for="id">Enter ID:</label>
+        <input type="text" name="id" id="id"> <br/>
+        <button type="button" onclick="deleteByID()">Delete</button>
+    </form>
+    <br/>
+    <div id="result"> </div>
+    
+    <script>
+    	
+    	function deleteByID()
+    	{
+    		
+    
+    		const xmlhttp = new XMLHttpRequest();
+    		id = document.getElementById("id").value
+    		xmlhttp.onreadystatechange = function()
+            {
+                   if(this.status == 200 && this.readyState == 4)
+                   {
+                	   document.getElementById("result").innerHTML = this.responseText;
+                   }
+            };
+    		xmlhttp.open("DELETE", "/students/deleteById/"+id, true);
+    		xmlhttp.send();
+    	}
+    </script>
+    </body>
+</html>

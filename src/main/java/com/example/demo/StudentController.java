@@ -1,13 +1,9 @@
 package com.example.demo;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -15,35 +11,23 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
-    private static final String XML_FILE_PATH = "C:\\Users\\Abdeltwab\\Desktop\\forintern\\soa\\src\\main\\java\\com\\example\\demo\\test.xml";
+    private static final String XML_FILE_PATH = "D:\\7th semester\\SOA\\code\\assignment 1\\src\\main\\java\\com\\example\\demo\\test.xml";
 
     @GetMapping("/allStudents")
     public List<StudentRequest> getAllStudents() {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
-            File xmlFile = new File(XML_FILE_PATH);
-
-            // Check if the file exists before attempting to parse it
-            if (!xmlFile.exists()) {
-                System.out.println("No students have been saved yet.");
-                return result; // Return an empty list indicating no students found
-            }
-
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(xmlFile);
+            Document doc = builder.parse(new File(XML_FILE_PATH));
 
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
@@ -56,6 +40,7 @@ public class StudentController {
                 studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                 studentResponse.setGender(getElementValue(studentElement, "Gender"));
                 studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
+                studentResponse.setLevel(Integer.parseInt(getElementValue(studentElement, "Level")));
                 studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                 result.add(studentResponse);
@@ -64,11 +49,10 @@ public class StudentController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return result;
     }
 
-    @PostMapping("/saveStudents")
+@PostMapping("/saveStudents")
 public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
     try {
@@ -112,6 +96,10 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             Element gpa = doc.createElement("GPA");
             Text gpaVal = doc.createTextNode(String.valueOf(studentRequest.getGpa()));
             gpa.appendChild(gpaVal);
+            
+            Element level = doc.createElement("Level");
+            Text levelVal = doc.createTextNode(String.valueOf(studentRequest.getLevel()));
+            level.appendChild(levelVal);
 
             Element address = doc.createElement("Address");
             Text addressVal = doc.createTextNode(studentRequest.getAddress());
@@ -121,6 +109,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             student.appendChild(lastName);
             student.appendChild(gender);
             student.appendChild(gpa);
+            student.appendChild(level);
             student.appendChild(address);
 
             root.appendChild(student);
@@ -154,7 +143,8 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             // Check if the file exists before attempting to parse it
             if (!xmlFile.exists()) {
                 System.out.println("No students have been saved yet.");
-                return result; // Return an empty list indicating no students found
+              
+                return result;
             }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
@@ -175,6 +165,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                     studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                     studentResponse.setGender(getElementValue(studentElement, "Gender"));
                     studentResponse.setGpa(studentGPA);
+                    studentResponse.setLevel(Integer.parseInt(getElementValue(studentElement, "Level")));
                     studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                     result.add(studentResponse);
@@ -220,6 +211,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                     studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                     studentResponse.setGender(getElementValue(studentElement, "Gender"));
                     studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
+                    studentResponse.setLevel(Integer.parseInt(getElementValue(studentElement, "Level")));
                     studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                     result.add(studentResponse);

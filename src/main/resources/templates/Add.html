@@ -1,56 +1,95 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="../static/Add.css">
+    <link rel="stylesheet" href="Add.css">
     <meta charset="UTF-8">
     <title>Add Student</title>
 </head>
 <body>
 
 <h2>Add Student</h2>
-
-<form id="studentForm">
-
-
-    <input placeholder="Id" type="text" id="id" required><br>
-
-
-    <input placeholder="FirstName" type="text" id="firstName" required><br>
-
-
-    <input placeholder="lastName" type="text" id="lastName" required><br>
-
-
-    <input placeholder="gender"  type="text" id="gender" required><br>
-
-
-    <input placeholder="gpa"  type="number" step="0.01" id="gpa" required><br>
-
-
-    <input placeholder="address" type="text" id="address" required><br>
-
-    <button type="button" onclick="submitForm()">Save</button>
-</form>
+	
+	<label for="numberOfStudents">Choose the number of students to add</label> <br/><br/>
+	<input type="number" id="numberOfStudents" min="0" step="1" value="0" onchange="createForms(this.value)"><br>
+	
+	<div id="container"></div>
 
 <script>
-    function submitForm() {
-        // Get form data
-        var id = document.getElementById("id").value;
-        var firstName = document.getElementById("firstName").value;
-        var lastName = document.getElementById("lastName").value;
-        var gender = document.getElementById("gender").value;
-        var gpa = document.getElementById("gpa").value;
-        var address = document.getElementById("address").value;
 
-        // Create a JSON object with the form data
-        var formData = {
-            id: id,
-            firstName: firstName,
-            lastName: lastName,
-            gender: gender,
-            gpa: gpa,
-            address: address
-        };
+	function createForms(numOfStudents)
+	{
+		var container = document.getElementById("container");
+	    container.innerHTML = ""; 
+	    
+	    for (var i = 1; i <= numOfStudents; i++) 
+	    {
+	    	var newForm = document.createElement("div");
+	    	newForm.innerHTML = `<h3>Student ${i} </h3><form id="studentForm${i}">
+
+
+	    	    <input placeholder="Id" type="text" id="id${i}" required><br>
+
+
+	    	    <input placeholder="FirstName" type="text" id="firstName${i}" required><br>
+
+
+	    	    <input placeholder="lastName" type="text" id="lastName${i}" required><br>
+
+
+	    	    <input placeholder="gender"  type="text" id="gender${i}" required><br>
+
+
+	    	    <input placeholder="gpa"  type="number" step="0.01" id="gpa${i}" required><br>
+
+	    		<input placeholder="level"  type="number" step="1" id="level${i}" required><br>
+
+	    	    <input placeholder="address" type="text" id="address${i}" required><br>
+
+	    	</form><br/>`;
+	    	
+	    	container.appendChild(newForm);
+	    }
+	  	if(numOfStudents> 0)
+	  	{
+	  		var submitButton = document.createElement("button");
+	        submitButton.type = "button";
+	        submitButton.textContent = "Save";
+	        submitButton.onclick = submitForm;
+	        container.appendChild(submitButton);
+	  	}
+    	
+	}
+	
+    function submitForm() {
+    	var numberOFStudents = document.getElementById("numberOfStudents").value;
+    	response = []
+    	
+    	for (i = 1;i<= numberOFStudents;i++)
+    		{
+    		 	// Get form data
+            	var id = document.getElementById("id"+i).value;
+            	var firstName = document.getElementById("firstName"+i).value;
+           		var lastName = document.getElementById("lastName"+i).value;
+            	var gender = document.getElementById("gender"+i).value;
+            	var gpa = document.getElementById("gpa"+i).value;
+            	var level = document.getElementById("level"+i).value;
+            	var address = document.getElementById("address"+i).value;
+
+            	// Create a JSON object with the form data
+            	var formData = {
+                	id: id,
+                	firstName: firstName,
+                	lastName: lastName,
+                	gender: gender,
+                	gpa: gpa,
+                	level:level,
+                	address: address
+            	};
+            	
+            	response.push(formData )
+    		}
+       	
+    	
 
         // Make an AJAX request to your API endpoint
         var xhr = new XMLHttpRequest();
@@ -62,7 +101,7 @@
                 alert(xhr.responseText);
             }
         };
-        xhr.send(JSON.stringify([formData])); // Send as an array to match your API endpoint
+        xhr.send(JSON.stringify(response)); // Send as an array to match your API endpoint
 
         // Alternatively, you can use a library like jQuery for AJAX requests
         // $.post("/students/saveStudents", formData, function(data) {

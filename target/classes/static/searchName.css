@@ -2,6 +2,7 @@ body{
 text-align:center;
 
 
+
 }
 button{
 padding:10px;
@@ -12,12 +13,19 @@ color:white;
 }
 input{
 background-color:transparent;
-color:white;
 padding:8px;
 width:50%;
 margin-bottom:10px;
 
+}
 
+table
+{
+	margin:auto;
+	border-collapse: collapse;
+}
 
-
+td
+{
+	padding:5px;
 }
