@@ -2,15 +2,26 @@
 
 for add test json file 
 
+   [
+   
     {
-      "id": "20200301",
-      "firstName": "Ahmed",
-      "lastName": "Mohamed",
-      "gender": "f",
-      "gpa": 3.17,
-      "level": 4,
-      "address": "Giza"
+        "id": "20210002",
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "gender": "Female",
+        "gpa": 3.8,
+        "address": "456 Oak St"
+    },
+    {
+        "id": "20210003",
+        "firstName": "Bob",
+        "lastName": "Johnson",
+        "gender": "Male",
+        "gpa": 3.2,
+        "address": "789 Pine St"
     }
+]
+
 
 Search By GPA
 http://localhost:8080/students/searchByGPA?gpa=3.17
