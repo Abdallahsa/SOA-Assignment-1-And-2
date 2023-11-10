@@ -145,7 +145,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 }
 
     @GetMapping("/searchByGPA")
-    public List<StudentRequest> searchByGPA(@RequestParam double gpa) {
+    public String searchByGPA(@RequestParam double gpa, Model model) {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
@@ -154,7 +154,9 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             // Check if the file exists before attempting to parse it
             if (!xmlFile.exists()) {
                 System.out.println("No students have been saved yet.");
-                return result; // Return an empty list indicating no students found
+                model.addAttribute("students", result);
+
+                return "searchByGpaResult"; // Return an empty list indicating no students found
             }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
@@ -186,7 +188,9 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             throw new RuntimeException(e);
         }
 
-        return result;
+        model.addAttribute("students", result);
+
+        return "searchByGpaResult";
     }
 
 
