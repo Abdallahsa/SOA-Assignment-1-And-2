@@ -2,6 +2,7 @@ package com.example.demo;
 
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,6 +11,8 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,39 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController {
 
-    private static final String XML_FILE_PATH = "C:\\Users\\Abdallah Saleh\\Desktop\\demo1\\src\\main\\java\\com\\example\\demo\\test.xml";
+    private static final String XML_FILE_PATH = "E:\\Level 4\\First Term\\SOA\\SOA-Assignment-1\\src\\main\\java\\com\\example\\demo\\test.xml";
+
+    @GetMapping("/allStudents")
+    public List<StudentRequest> getAllStudents() {
+        List<StudentRequest> result = new ArrayList<>();
+
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+            DocumentBuilder builder = dbf.newDocumentBuilder();
+            Document doc = builder.parse(new File(XML_FILE_PATH));
+
+            NodeList studentNodes = doc.getElementsByTagName("Student");
+
+            for (int i = 0; i < studentNodes.getLength(); i++) {
+                Element studentElement = (Element) studentNodes.item(i);
+
+                StudentRequest studentResponse = new StudentRequest();
+                studentResponse.setId(studentElement.getAttribute("ID"));
+                studentResponse.setFirstName(getElementValue(studentElement, "FirstName"));
+                studentResponse.setLastName(getElementValue(studentElement, "LastName"));
+                studentResponse.setGender(getElementValue(studentElement, "Gender"));
+                studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
+                studentResponse.setAddress(getElementValue(studentElement, "Address"));
+
+                result.add(studentResponse);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
 
     @PostMapping("/saveStudents")
     public String saveStudent(@RequestBody StudentRequest studentRequest) {
@@ -91,7 +126,6 @@ public class StudentController {
 
         return "Student saved successfully.";
     }
-
     @GetMapping("/searchByGPA")
     public List<StudentRequest> searchByGPA(@RequestParam double gpa) {
         List<StudentRequest> result = new ArrayList<>();
@@ -162,6 +196,47 @@ public class StudentController {
         }
 
         return result;
+    }
+    @DeleteMapping("/deleteById/{id}")
+    public String deleteStudentById(@PathVariable String id) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+            DocumentBuilder builder = dbf.newDocumentBuilder();
+            Document doc = builder.parse(new File(XML_FILE_PATH));
+
+            NodeList studentNodes = doc.getElementsByTagName("Student");
+
+            for (int i = 0; i < studentNodes.getLength(); i++) {
+                Element studentElement = (Element) studentNodes.item(i);
+
+                if (studentElement.getAttribute("ID").equals(id)) {
+                    // Remove the matching student element
+                    Node parentNode = studentElement.getParentNode();
+                    parentNode.removeChild(studentElement);
+
+                    // Save the updated XML
+                    saveUpdatedXml(doc);
+
+                    return "Student with ID " + id + " deleted successfully.";
+                }
+            }
+
+            return "Student with ID " + id + " not found.";
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Add proper logging in a real application
+            return "An error occurred during the deletion process.";
+        }
+    }
+
+    private void saveUpdatedXml(Document doc) throws TransformerException {
+        DOMSource source = new DOMSource(doc);
+        Result result = new StreamResult(new File(XML_FILE_PATH));
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(source, result);
     }
     private String getElementValue(Element parentElement, String elementName) {
         NodeList nodeList = parentElement.getElementsByTagName(elementName);
