@@ -13,7 +13,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -54,29 +59,31 @@ public class StudentController {
         return result;
     }
 
-    @PostMapping("/saveStudents")
-    public String saveStudent(@RequestBody StudentRequest studentRequest) {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
-        try {
-            DocumentBuilder builder = dbf.newDocumentBuilder();
+@PostMapping("/saveStudents")
+public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+    try {
+        DocumentBuilder builder = dbf.newDocumentBuilder();
 
-            // Load existing XML document if it exists
-            Document doc;
-            File xmlFile = new File(XML_FILE_PATH);
-            if (xmlFile.exists()) {
-                doc = builder.parse(xmlFile);
+        // Load existing XML document if it exists
+        Document doc;
+        File xmlFile = new File(XML_FILE_PATH);
+        if (xmlFile.exists()) {
+            doc = builder.parse(xmlFile);
+        } else {
+            doc = builder.newDocument();
+            Element root = doc.createElement("University");
+            doc.appendChild(root);
+        }
 
-                // Check if student with given ID already exists
-                if (isStudentAlreadySaved(doc, studentRequest.getId())) {
-                    return "Student with ID " + studentRequest.getId() + " is already saved.";
-                }
-            } else {
-                doc = builder.newDocument();
-                Element root = doc.createElement("University");
-                doc.appendChild(root);
+        Element root = doc.getDocumentElement();
+
+        for (StudentRequest studentRequest : studentRequests) {
+            // Check if student with given ID already exists
+            if (isStudentAlreadySaved(doc, studentRequest.getId())) {
+                System.out.println("Student with ID " + studentRequest.getId() + " is already saved.");
+                continue; // Skip to the next student
             }
-
-            Element root = doc.getDocumentElement();
 
             Element student = doc.createElement("Student");
             student.setAttribute("ID", studentRequest.getId());
@@ -108,32 +115,42 @@ public class StudentController {
             student.appendChild(address);
 
             root.appendChild(student);
-
-            DOMSource source = new DOMSource(doc);
-
-            Result result = new StreamResult(xmlFile);
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(source, result);
-
-            System.out.println("OK" + XML_FILE_PATH);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
-        return "Student saved successfully.";
+        DOMSource source = new DOMSource(doc);
+
+        Result result = new StreamResult(xmlFile);
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(source, result);
+
+        System.out.println("OK" + XML_FILE_PATH);
+
+    } catch (Exception e) {
+        throw new RuntimeException(e);
     }
+
+    return "Students saved successfully.";
+}
+
     @GetMapping("/searchByGPA")
     public List<StudentRequest> searchByGPA(@RequestParam double gpa) {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
+            File xmlFile = new File(XML_FILE_PATH);
+
+            // Check if the file exists before attempting to parse it
+            if (!xmlFile.exists()) {
+                System.out.println("No students have been saved yet.");
+                return result; // Return an empty list indicating no students found
+            }
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(new File(XML_FILE_PATH));
+            Document doc = builder.parse(xmlFile);
 
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
@@ -162,14 +179,23 @@ public class StudentController {
         return result;
     }
 
+
     @GetMapping("/searchByFirstName")
     public List<StudentRequest> searchByFirstName(@RequestParam String firstName) {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
+            File xmlFile = new File(XML_FILE_PATH);
+
+            // Check if the file exists before attempting to parse it
+            if (!xmlFile.exists()) {
+                System.out.println("No students have been saved yet.");
+                return result; // Return an empty list indicating no students found
+            }
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(new File(XML_FILE_PATH));
+            Document doc = builder.parse(xmlFile);
 
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
@@ -197,12 +223,21 @@ public class StudentController {
 
         return result;
     }
+
     @DeleteMapping("/deleteById/{id}")
     public String deleteStudentById(@PathVariable String id) {
         try {
+            File xmlFile = new File(XML_FILE_PATH);
+
+            // Check if the file exists before attempting to parse it
+            if (!xmlFile.exists()) {
+                System.out.println("No students have been saved yet.");
+                return "No students have been saved yet.";
+            }
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(new File(XML_FILE_PATH));
+            Document doc = builder.parse(xmlFile);
 
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
@@ -214,7 +249,7 @@ public class StudentController {
                     Node parentNode = studentElement.getParentNode();
                     parentNode.removeChild(studentElement);
 
-                    // Save the updated XML
+                    // Save the updated XML without introducing extra spaces
                     saveUpdatedXml(doc);
 
                     return "Student with ID " + id + " deleted successfully.";
@@ -229,15 +264,31 @@ public class StudentController {
         }
     }
 
+
     private void saveUpdatedXml(Document doc) throws TransformerException {
-        DOMSource source = new DOMSource(doc);
-        Result result = new StreamResult(new File(XML_FILE_PATH));
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.transform(source, result);
+        try {
+            // Use a StringWriter to prevent extra spaces when saving
+            StringWriter sw = new StringWriter();
+            StreamResult result = new StreamResult(sw);
+
+            // Use the transformer to write the XML content to the StringWriter
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(new DOMSource(doc), result);
+
+            // Update the file with the content from the StringWriter
+            try (FileWriter fileWriter = new FileWriter(new File(XML_FILE_PATH))) {
+                fileWriter.write(sw.toString());
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
     private String getElementValue(Element parentElement, String elementName) {
         NodeList nodeList = parentElement.getElementsByTagName(elementName);
         if (nodeList.getLength() > 0) {
