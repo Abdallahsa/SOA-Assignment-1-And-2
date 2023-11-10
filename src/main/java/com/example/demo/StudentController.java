@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -21,14 +23,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/students")
 public class StudentController {
 
     private static final String XML_FILE_PATH = "D:\\7th semester\\SOA\\code\\assignment 1\\src\\main\\java\\com\\example\\demo\\test.xml";
 
     @GetMapping("/allStudents")
-    public List<StudentRequest> getAllStudents() {
+    public String getAllStudents(Model model) {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
@@ -47,6 +49,7 @@ public class StudentController {
                 studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                 studentResponse.setGender(getElementValue(studentElement, "Gender"));
                 studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
+                studentResponse.setLevel(Integer.parseInt(getElementValue(studentElement, "Level")));
                 studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                 result.add(studentResponse);
@@ -56,7 +59,8 @@ public class StudentController {
             throw new RuntimeException(e);
         }
 
-        return result;
+        model.addAttribute("students", result);
+        return "viewAllStudents";
     }
 
 @PostMapping("/saveStudents")
@@ -103,6 +107,10 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             Element gpa = doc.createElement("GPA");
             Text gpaVal = doc.createTextNode(String.valueOf(studentRequest.getGpa()));
             gpa.appendChild(gpaVal);
+            
+            Element level = doc.createElement("Level");
+            Text levelVal = doc.createTextNode(String.valueOf(studentRequest.getLevel()));
+            level.appendChild(levelVal);
 
             Element address = doc.createElement("Address");
             Text addressVal = doc.createTextNode(studentRequest.getAddress());
@@ -112,6 +120,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             student.appendChild(lastName);
             student.appendChild(gender);
             student.appendChild(gpa);
+            student.appendChild(level);
             student.appendChild(address);
 
             root.appendChild(student);
@@ -166,6 +175,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                     studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                     studentResponse.setGender(getElementValue(studentElement, "Gender"));
                     studentResponse.setGpa(studentGPA);
+                    studentResponse.setGender(getElementValue(studentElement, "Level"));
                     studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                     result.add(studentResponse);
@@ -211,6 +221,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                     studentResponse.setLastName(getElementValue(studentElement, "LastName"));
                     studentResponse.setGender(getElementValue(studentElement, "Gender"));
                     studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
+                    studentResponse.setGender(getElementValue(studentElement, "Level"));
                     studentResponse.setAddress(getElementValue(studentElement, "Address"));
 
                     result.add(studentResponse);
