@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <University>
-                
+        
     
     
     <Student ID="20200300">
@@ -28,6 +28,75 @@
         
         
         <Address>Giza</Address>
+
+                        
+    
+     </Student>
+    
+    
+    <Student ID="20200274">
+                                                
+        
+        
+        
+        
+        <FirstName>Jane</FirstName>
+                                                
+        
+        
+        
+        
+        <LastName>nnn</LastName>
+                                                
+        
+        
+        
+        
+        <Gender>asd</Gender>
+                                                
+        
+        
+        
+        
+        <GPA>66.0</GPA>
+                                                
+        
+        
+        
+        
+        <Address>123</Address>
+                                            
+    
+    
+    
+    
+    </Student>
+                    
+
+    
+    
+    
+    <Student ID="20210004">
+                                
+        
+        
+        <FirstName>Jane</FirstName>
+                                
+        
+        
+        <LastName>Smith</LastName>
+                                
+        
+        
+        <Gender>Female</Gender>
+                                
+        
+        
+        <GPA>3.8</GPA>
+                                
+        
+        
+        <Address>456 Oak St</Address>
                             
     
     
@@ -35,6 +104,7 @@
                 
     
     
+
         
 
     
@@ -70,4 +140,32 @@
             
     </Student>
     
+
+    <Student ID="20210005">
+                                
+        
+        
+        <FirstName>Jane</FirstName>
+                                
+        
+        
+        <LastName>Johnson</LastName>
+                                
+        
+        
+        <Gender>Male</Gender>
+                                
+        
+        
+        <GPA>3.2</GPA>
+                                
+        
+        
+        <Address>789 Pine St</Address>
+                            
+    
+    
+    </Student>
+            
+
 </University>

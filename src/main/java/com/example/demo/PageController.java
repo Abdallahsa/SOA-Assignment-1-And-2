@@ -26,4 +26,19 @@ public class PageController
 	{
         return "deleteById";
     }
+	
+    @GetMapping("/")
+    public String showSpecificPage() {
+        return "Home.htl";
+    }
+
+    @GetMapping("/add")
+    public String Add() {
+        return "Add.html";
+    }
+    @GetMapping("/searchName")
+    public String search() {
+        return "searchByName.html";
+    }
+
 }

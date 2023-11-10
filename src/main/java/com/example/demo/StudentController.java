@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -22,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import org.springframework.ui.Model;
 @Controller
 @RequestMapping("/students")
 public class StudentController {
@@ -85,7 +84,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
         for (StudentRequest studentRequest : studentRequests) {
             // Check if student with given ID already exists
             if (isStudentAlreadySaved(doc, studentRequest.getId())) {
-                System.out.println("Student with ID " + studentRequest.getId() + " is already saved.");
+                    System.out.println("Student with ID " + studentRequest.getId() + " is already saved.");
                 continue; // Skip to the next student
             }
 
