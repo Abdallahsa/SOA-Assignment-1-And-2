@@ -22,5 +22,10 @@ margin-bottom:10px;
 table
 {
 	margin:auto;
+	border-collapse: collapse;
 }
 
+td
+{
+	padding:5px;
+}
