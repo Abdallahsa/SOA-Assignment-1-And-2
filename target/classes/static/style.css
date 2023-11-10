@@ -1,0 +1,79 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+    background-color:black;
+}
+.landing-page{
+    min-height: 100vh;
+    background-image: url('/img/josh-gordon-pR166OP_l6g-unsplash.jpg');
+    background-size: cover;
+}
+.overlay{
+    background-color: #00000030;
+    position: absolute;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+.header-area{
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    display: flex;
+    padding: 8px;
+
+
+
+}
+.header-area .logo{
+    width: 300px;
+    padding: 15px;
+    font-weight: bold;
+}
+.links{
+    list-style: none;
+    width: 100%;
+    text-align: right;
+    padding-right: 20px;
+    font-size: 15px;
+
+}
+.links li{
+    display: inline-block;
+    margin-left: 10px;
+}
+.links li a{
+    color: #fff;
+    text-decoration: none;
+}
+.links li a:hover, .links li a.active {
+    color:var(--main-color);
+    transition: 1s;
+
+}
+.intro-text{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 2;
+    color: #fff;
+    text-align: center;
+    margin-top: 10px;
+    width: 95%;
+}
+.intro-text h1{
+}
+@media (max-width:575px){
+    .intro-text h1{
+        font-size: 22px;
+    }
+}
+.intro-text h1 span{
+    color:var(--main-color) ;
+}
+.intro-text p{
+    line-height: 1.6;
+    font-size: 20px;
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="../static/Add.css">
+    <meta charset="UTF-8">
+    <title>Add Student</title>
+</head>
+<body>
+
+<h2>Add Student</h2>
+
+<form id="studentForm">
+
+
+    <input placeholder="Id" type="text" id="id" required><br>
+
+
+    <input placeholder="FirstName" type="text" id="firstName" required><br>
+
+
+    <input placeholder="lastName" type="text" id="lastName" required><br>
+
+
+    <input placeholder="gender"  type="text" id="gender" required><br>
+
+
+    <input placeholder="gpa"  type="number" step="0.01" id="gpa" required><br>
+
+
+    <input placeholder="address" type="text" id="address" required><br>
+
+    <button type="button" onclick="submitForm()">Save</button>
+</form>
+
+<script>
+    function submitForm() {
+        // Get form data
+        var id = document.getElementById("id").value;
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var gender = document.getElementById("gender").value;
+        var gpa = document.getElementById("gpa").value;
+        var address = document.getElementById("address").value;
+
+        // Create a JSON object with the form data
+        var formData = {
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            gender: gender,
+            gpa: gpa,
+            address: address
+        };
+
+        // Make an AJAX request to your API endpoint
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/students/saveStudents", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Handle the response, e.g., display a success message
+                alert(xhr.responseText);
+            }
+        };
+        xhr.send(JSON.stringify([formData])); // Send as an array to match your API endpoint
+
+        // Alternatively, you can use a library like jQuery for AJAX requests
+        // $.post("/students/saveStudents", formData, function(data) {
+        //     alert(data);
+        // });
+    }
+</script>
+</body>
+</html>
