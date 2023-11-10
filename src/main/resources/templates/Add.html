@@ -9,8 +9,8 @@
 
 <h2>Add Student</h2>
 	
-	<label for="numberOfStudents">Choose the number of students to add</label>
-	<input type="number" id="numberOfStudents" min="1" step="1" value="1" onchange="createForms(this.value)"><br>
+	<label for="numberOfStudents">Choose the number of students to add</label> <br/><br/>
+	<input type="number" id="numberOfStudents" min="0" step="1" value="0" onchange="createForms(this.value)"><br>
 	
 	<div id="container"></div>
 
@@ -49,12 +49,15 @@
 	    	
 	    	container.appendChild(newForm);
 	    }
-	  	
-    	var submitButton = document.createElement("button");
-        submitButton.type = "button";
-        submitButton.textContent = "Save";
-        submitButton.onclick = submitForm;
-        container.appendChild(submitButton);
+	  	if(numOfStudents> 0)
+	  	{
+	  		var submitButton = document.createElement("button");
+	        submitButton.type = "button";
+	        submitButton.textContent = "Save";
+	        submitButton.onclick = submitForm;
+	        container.appendChild(submitButton);
+	  	}
+    	
 	}
 	
     function submitForm() {

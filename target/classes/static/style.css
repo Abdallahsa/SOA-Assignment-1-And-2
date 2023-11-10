@@ -1,6 +1,6 @@
 body{
     font-family: 'Open Sans', sans-serif;
-    background-color:black;
+    
 }
 .landing-page{
     min-height: 100vh;
@@ -8,7 +8,7 @@ body{
     background-size: cover;
 }
 .overlay{
-    background-color: #00000030;
+   
     position: absolute;
     z-index: 1;
     height: 100%;
@@ -19,7 +19,6 @@ body{
 .header-area{
     position: relative;
     z-index: 2;
-    color: #fff;
     display: flex;
     padding: 8px;
 
@@ -44,8 +43,13 @@ body{
     margin-left: 10px;
 }
 .links li a{
-    color: #fff;
     text-decoration: none;
+    color:black;
+    border-bottom:2px solid white;
+}
+
+.links li a:hover{
+   border-bottom:2px solid black;
 }
 .links li a:hover, .links li a.active {
     color:var(--main-color);
@@ -58,13 +62,11 @@ body{
     top: 50%;
     transform: translate(-50%,-50%);
     z-index: 2;
-    color: #fff;
     text-align: center;
     margin-top: 10px;
     width: 95%;
 }
-.intro-text h1{
-}
+
 @media (max-width:575px){
     .intro-text h1{
         font-size: 22px;
