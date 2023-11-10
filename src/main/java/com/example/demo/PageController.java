@@ -36,7 +36,10 @@ public class PageController
         return "deleteById";
     }
 	
-    
-    
+	@GetMapping("/all")
+	public String viewAll()
+	{
+		return "viewAllStudents";
+	}
 
 }

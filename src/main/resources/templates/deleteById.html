@@ -3,7 +3,7 @@
 	<head>
 	<title>Delete by ID</title>
 	</head>
-	
+	<body>
 	<h2>Delete by ID</h2>
 	
 	<form>
@@ -20,7 +20,6 @@
     	{
     		const xmlhttp = new XMLHttpRequest();
     		id = document.getElementById("id").value
-    		console.log(id)
     		xmlhttp.onload = function() {
     		document.getElementById("result").innerHTML = this.responseText;
     		   }
@@ -28,4 +27,5 @@
     		xmlhttp.send();
     	}
     </script>
+    </body>
 </html>

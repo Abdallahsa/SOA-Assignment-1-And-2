@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.ui.Model;
 
 @RestController
 @RequestMapping("/students")
@@ -23,7 +21,7 @@ public class StudentController {
     private static final String XML_FILE_PATH = "D:\\7th semester\\SOA\\code\\assignment 1\\src\\main\\java\\com\\example\\demo\\test.xml";
 
     @GetMapping("/allStudents")
-    public String getAllStudents(Model model) {
+    public List<StudentRequest> getAllStudents() {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
@@ -51,9 +49,7 @@ public class StudentController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        model.addAttribute("students", result);
-        return "viewAllStudents";
+        return result;
     }
 
 @PostMapping("/saveStudents")
