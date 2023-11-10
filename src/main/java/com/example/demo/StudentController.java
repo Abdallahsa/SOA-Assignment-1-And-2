@@ -32,9 +32,17 @@ public class StudentController {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
+            File xmlFile = new File(XML_FILE_PATH);
+
+            // Check if the file exists before attempting to parse it
+            if (!xmlFile.exists()) {
+                System.out.println("No students have been saved yet.");
+                return result; // Return an empty list indicating no students found
+            }
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(new File(XML_FILE_PATH));
+            Document doc = builder.parse(xmlFile);
 
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
@@ -59,7 +67,7 @@ public class StudentController {
         return result;
     }
 
-@PostMapping("/saveStudents")
+    @PostMapping("/saveStudents")
 public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
     try {
