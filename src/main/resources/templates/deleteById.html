@@ -10,20 +10,26 @@
 	<form>
         <label for="id">Enter ID:</label>
         <input type="text" name="id" id="id"> <br/>
-        <button onclick="deleteByID()">Delete</button>
+        <button type="button" onclick="deleteByID()">Delete</button>
     </form>
-    
+    <br/>
     <div id="result"> </div>
     
     <script>
     	
     	function deleteByID()
     	{
+    		
+    
     		const xmlhttp = new XMLHttpRequest();
     		id = document.getElementById("id").value
-    		xmlhttp.onload = function() {
-    		document.getElementById("result").innerHTML = this.responseText;
-    		   }
+    		xmlhttp.onreadystatechange = function()
+            {
+                   if(this.status == 200 && this.readyState == 4)
+                   {
+                	   document.getElementById("result").innerHTML = this.responseText;
+                   }
+            };
     		xmlhttp.open("DELETE", "/students/deleteById/"+id, true);
     		xmlhttp.send();
     	}
