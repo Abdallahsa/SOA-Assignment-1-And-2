@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search by First Name</title>
+    <link rel="stylesheet" href="../static/searchName.css">
+</head>
+<body>
+
+<h2>Search by First Name</h2>
+
+<form id="searchForm">
+    <label>First Name:</label>
+    <input type="text" id="firstName" required><br>
+
+    <button type="button" onclick="searchByFirstName()">Search</button>
+</form>
+
+<div id="searchResults"></div>
+
+<script>
+    function searchByFirstName() {
+        // Get form data
+        var firstName = document.getElementById("firstName").value;
+
+        // Make an AJAX request to your API endpoint
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/students/searchByFirstName?firstName=" + encodeURIComponent(firstName), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Handle the response, e.g., display the search results
+                    displaySearchResults(JSON.parse(xhr.responseText));
+                } else {
+                    // Handle errors
+                    alert("Error: " + xhr.statusText);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function displaySearchResults(results) {
+        var resultsDiv = document.getElementById("searchResults");
+        resultsDiv.innerHTML = ""; // Clear previous results
+
+        if (results.length === 0) {
+            resultsDiv.innerHTML = "No students found.";
+            return;
+        }
+
+        var table = document.createElement("table");
+        table.border = "1";
+
+        // Create table headers
+        var headerRow = table.insertRow(0);
+        for (var key in results[0]) {
+            var headerCell = headerRow.insertCell();
+            headerCell.innerHTML = key;
+        }
+
+        // Fill in table data
+        for (var i = 0; i < results.length; i++) {
+            var row = table.insertRow();
+            for (var key in results[i]) {
+                var cell = row.insertCell();
+                cell.innerHTML = results[i][key];
+            }
+        }
+
+        resultsDiv.appendChild(table);
+    }
+</script>
+
+</body>
+</html>
