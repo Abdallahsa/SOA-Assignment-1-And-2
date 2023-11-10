@@ -1,0 +1,27 @@
+<!DocType html>
+<html>
+	<title>Delete by ID</title>
+	
+	<form>
+        <label for="id">Enter ID:</label>
+        <input type="text" name="id" id="id">
+        <input type="button" value="Delete" onclick="deleteByID()">
+        <div id="result">
+        </div>
+    </form>
+    
+    <script>
+    	
+    	function deleteByID()
+    	{
+    		const xmlhttp = new XMLHttpRequest();
+    		id = document.getElementById("id").value
+    		console.log(id)
+    		xmlhttp.onload = function() {
+    		document.getElementById("result").innerHTML = this.responseText;
+    		   }
+    		xmlhttp.open("DELETE", "/students/deleteById/"+id, true);
+    		xmlhttp.send();
+    	}
+    </script>
+</html>
