@@ -1,0 +1,202 @@
+package com.example.demo;
+
+import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/students")
+public class StudentController {
+
+    private static final String XML_FILE_PATH = "C:\\Users\\Abdallah Saleh\\Desktop\\demo1\\src\\main\\java\\com\\example\\demo\\test.xml";
+
+    @PostMapping("/saveStudents")
+    public String saveStudent(@RequestBody StudentRequest studentRequest) {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+        try {
+            DocumentBuilder builder = dbf.newDocumentBuilder();
+
+            // Load existing XML document if it exists
+            Document doc;
+            File xmlFile = new File(XML_FILE_PATH);
+            if (xmlFile.exists()) {
+                doc = builder.parse(xmlFile);
+
+                // Check if student with given ID already exists
+                if (isStudentAlreadySaved(doc, studentRequest.getId())) {
+                    return "Student with ID " + studentRequest.getId() + " is already saved.";
+                }
+            } else {
+                doc = builder.newDocument();
+                Element root = doc.createElement("University");
+                doc.appendChild(root);
+            }
+
+            Element root = doc.getDocumentElement();
+
+            Element student = doc.createElement("Student");
+            student.setAttribute("ID", studentRequest.getId());
+
+            Element firstName = doc.createElement("FirstName");
+            Text firstNameVal = doc.createTextNode(studentRequest.getFirstName());
+            firstName.appendChild(firstNameVal);
+
+            Element lastName = doc.createElement("LastName");
+            Text lastNameVal = doc.createTextNode(studentRequest.getLastName());
+            lastName.appendChild(lastNameVal);
+
+            Element gender = doc.createElement("Gender");
+            Text genderVal = doc.createTextNode(studentRequest.getGender());
+            gender.appendChild(genderVal);
+
+            Element gpa = doc.createElement("GPA");
+            Text gpaVal = doc.createTextNode(String.valueOf(studentRequest.getGpa()));
+            gpa.appendChild(gpaVal);
+
+            Element address = doc.createElement("Address");
+            Text addressVal = doc.createTextNode(studentRequest.getAddress());
+            address.appendChild(addressVal);
+
+            student.appendChild(firstName);
+            student.appendChild(lastName);
+            student.appendChild(gender);
+            student.appendChild(gpa);
+            student.appendChild(address);
+
+            root.appendChild(student);
+
+            DOMSource source = new DOMSource(doc);
+
+            Result result = new StreamResult(xmlFile);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(source, result);
+
+            System.out.println("OK" + XML_FILE_PATH);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "Student saved successfully.";
+    }
+
+    @GetMapping("/searchByGPA")
+    public List<StudentRequest> searchByGPA(@RequestParam double gpa) {
+        List<StudentRequest> result = new ArrayList<>();
+
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+            DocumentBuilder builder = dbf.newDocumentBuilder();
+            Document doc = builder.parse(new File(XML_FILE_PATH));
+
+            NodeList studentNodes = doc.getElementsByTagName("Student");
+
+            for (int i = 0; i < studentNodes.getLength(); i++) {
+                Element studentElement = (Element) studentNodes.item(i);
+                String studentId = studentElement.getAttribute("ID");
+                double studentGPA = Double.parseDouble(getElementValue(studentElement, "GPA"));
+
+                if (studentGPA == gpa) {
+                    StudentRequest studentResponse = new StudentRequest();
+                    studentResponse.setId(studentId);
+                    studentResponse.setFirstName(getElementValue(studentElement, "FirstName"));
+                    studentResponse.setLastName(getElementValue(studentElement, "LastName"));
+                    studentResponse.setGender(getElementValue(studentElement, "Gender"));
+                    studentResponse.setGpa(studentGPA);
+                    studentResponse.setAddress(getElementValue(studentElement, "Address"));
+
+                    result.add(studentResponse);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+
+    @GetMapping("/searchByFirstName")
+    public List<StudentRequest> searchByFirstName(@RequestParam String firstName) {
+        List<StudentRequest> result = new ArrayList<>();
+
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+            DocumentBuilder builder = dbf.newDocumentBuilder();
+            Document doc = builder.parse(new File(XML_FILE_PATH));
+
+            NodeList studentNodes = doc.getElementsByTagName("Student");
+
+            for (int i = 0; i < studentNodes.getLength(); i++) {
+                Element studentElement = (Element) studentNodes.item(i);
+                String studentId = studentElement.getAttribute("ID");
+                String studentFirstName = getElementValue(studentElement, "FirstName");
+
+                if (studentFirstName != null && studentFirstName.equals(firstName)) {
+                    StudentRequest studentResponse = new StudentRequest();
+                    studentResponse.setId(studentId);
+                    studentResponse.setFirstName(studentFirstName);
+                    studentResponse.setLastName(getElementValue(studentElement, "LastName"));
+                    studentResponse.setGender(getElementValue(studentElement, "Gender"));
+                    studentResponse.setGpa(Double.parseDouble(getElementValue(studentElement, "GPA")));
+                    studentResponse.setAddress(getElementValue(studentElement, "Address"));
+
+                    result.add(studentResponse);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+    private String getElementValue(Element parentElement, String elementName) {
+        NodeList nodeList = parentElement.getElementsByTagName(elementName);
+        if (nodeList.getLength() > 0) {
+            return nodeList.item(0).getTextContent();
+        }
+        return null;
+    }
+
+    private boolean isStudentAlreadySaved(Document doc, String studentId) {
+        Element root = doc.getDocumentElement();
+        Element[] students = getChildElements(root, "Student");
+
+        for (Element student : students) {
+            if (studentId.equals(student.getAttribute("ID"))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Helper method to get child elements by tag name
+    private Element[] getChildElements(Element parent, String tagName) {
+        NodeList nodeList = parent.getElementsByTagName(tagName);
+        List<Element> elements = new ArrayList<>();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                elements.add((Element) node);
+            }
+        }
+
+        return elements.toArray(new Element[0]);
+    }
+
+}
