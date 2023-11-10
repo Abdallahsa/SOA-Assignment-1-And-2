@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.ui.Model;
 
-@Controller
+@RestController
 @RequestMapping("/students")
 public class StudentController {
 
@@ -138,7 +138,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 }
 
     @GetMapping("/searchByGPA")
-    public String searchByGPA(@RequestParam double gpa, Model model) {
+    public List<StudentRequest> searchByGPA(@RequestParam double gpa) {
         List<StudentRequest> result = new ArrayList<>();
 
         try {
@@ -147,9 +147,8 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             // Check if the file exists before attempting to parse it
             if (!xmlFile.exists()) {
                 System.out.println("No students have been saved yet.");
-                model.addAttribute("students", result);
-
-                return "searchByGpaResult"; // Return an empty list indicating no students found
+              
+                return result;
             }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
@@ -181,9 +180,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             throw new RuntimeException(e);
         }
 
-        model.addAttribute("students", result);
-
-        return "searchByGpaResult";
+        return result;
     }
 
 

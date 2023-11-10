@@ -1,10 +1,76 @@
-<!DocType html>
-<html>
-	<title>Search by GPA</title>
-	
-	<form action="/students/searchByGPA" method="get">
-        <label for="gpa">Enter GPA:</label>
-        <input type="text" name="gpa" id="gpa" >
-        <button type="submit">Search</button>
-    </form>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search by GPA</title>
+    <link rel="stylesheet" href="../static/searchName.css">
+</head>
+<body>
+
+<h2>Search by GPA</h2>
+
+<form id="searchForm">
+    <label>GPA:</label>
+    <input type="text" id="gpa" required><br>
+
+    <button type="button" onclick="searchByGpa()">Search</button>
+</form>
+
+<div id="searchResults"></div>
+
+<script>
+    function searchByGpa() {
+        // Get form data
+        var gpa = document.getElementById("gpa").value;
+
+        // Make an AJAX request to your API endpoint
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/students/searchByGPA?gpa=" +  encodeURIComponent(gpa), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Handle the response, e.g., display the search results
+                    displaySearchResults(JSON.parse(xhr.responseText));
+                } else {
+                    // Handle errors
+                    alert("Error: " + xhr.statusText);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function displaySearchResults(results) {
+        var resultsDiv = document.getElementById("searchResults");
+        resultsDiv.innerHTML = ""; // Clear previous results
+
+        if (results.length === 0) {
+            resultsDiv.innerHTML = "No students found.";
+            return;
+        }
+
+        var table = document.createElement("table");
+        table.border = "1";
+
+        // Create table headers
+        var headerRow = table.insertRow(0);
+        for (var key in results[0]) {
+            var headerCell = headerRow.insertCell();
+            headerCell.innerHTML = key;
+        }
+
+        // Fill in table data
+        for (var i = 0; i < results.length; i++) {
+            var row = table.insertRow();
+            for (var key in results[i]) {
+                var cell = row.insertCell();
+                cell.innerHTML = results[i][key];
+            }
+        }
+
+        resultsDiv.appendChild(table);
+    }
+</script>
+
+</body>
 </html>
