@@ -12,4 +12,18 @@ for add test json file
       "address": "Giza"
     }
 
+Search By GPA
+http://localhost:8080/students/searchByGPA?gpa=3.17
+
+Search By First Name
+http://localhost:8080/students/searchByFirstName?firstName=Ahmed
+
+Get all students
+
+http://localhost:8080/students/allStudents
+
+Delete By ID
+
+http://localhost:8080/students/deleteById/20200302
+
 
