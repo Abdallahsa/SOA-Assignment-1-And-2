@@ -9,13 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class PageController 
 {
-	@GetMapping("/viewAll")
-    public String viewAllStudents() 
-	{
-        return "viewAllStudents";
+	@GetMapping("/")
+    public String showSpecificPage() {
+        return "Home";
     }
 	
-	@GetMapping("/searchByGpa")
+	@GetMapping("/add")
+    public String Add() {
+        return "Add.html";
+    }
+	
+    @GetMapping("/searchName")
+    public String search() {
+        return "searchByName.html";
+    }
+    
+    @GetMapping("/searchByGpa")
     public String viewSearchByGpa() 
 	{
         return "searchByGpa";
@@ -27,18 +36,7 @@ public class PageController
         return "deleteById";
     }
 	
-    @GetMapping("/")
-    public String showSpecificPage() {
-        return "Home.htl";
-    }
-
-    @GetMapping("/add")
-    public String Add() {
-        return "Add.html";
-    }
-    @GetMapping("/searchName")
-    public String search() {
-        return "searchByName.html";
-    }
+    
+    
 
 }
