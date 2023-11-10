@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<University>
+                    
+    
+    
+    
+    <Student ID="20200300">
+                                        
+        
+        
+        
+        <FirstName>Ahmed</FirstName>
+                                        
+        
+        
+        
+        <LastName>Mohamed</LastName>
+                                        
+        
+        
+        
+        <Gender>f</Gender>
+                                        
+        
+        
+        
+        <GPA>3.17</GPA>
+                                        
+        
+        
+        
+        <Address>Giza</Address>
+                                    
+    
+    
+    
+    </Student>
+                
+    
+    
+    
+    <Student ID="20200301">
+                                
+        
+        
+        <FirstName>Ahmed</FirstName>
+                                
+        
+        
+        <LastName>Mohamed</LastName>
+                                
+        
+        
+        <Gender>f</Gender>
+                                
+        
+        
+        <GPA>3.17</GPA>
+                                
+        
+        
+        <Address>Giza</Address>
+                            
+    
+    
+    </Student>
+            
+    
+    
+    
+    
+    <Student ID="20200303">
+                
+        <FirstName>Ahmed</FirstName>
+                
+        <LastName>Mohamed</LastName>
+                
+        <Gender>f</Gender>
+                
+        <GPA>3.17</GPA>
+                
+        <Address>Giza</Address>
+            
+    </Student>
+        
+    <Student ID="20200304">
+                
+        <FirstName>Ahmed</FirstName>
+                
+        <LastName>Mohamed</LastName>
+                
+        <Gender>f</Gender>
+                
+        <GPA>3.17</GPA>
+                
+        <Address>Giza</Address>
+            
+    </Student>
+    
+</University>

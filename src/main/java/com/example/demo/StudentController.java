@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController {
 
-    private static final String XML_FILE_PATH = "E:\\Level 4\\First Term\\SOA\\SOA-Assignment-1\\src\\main\\java\\com\\example\\demo\\test.xml";
+    private static final String XML_FILE_PATH = "D:\\7th semester\\SOA\\code\\assignment 1\\src\\main\\java\\com\\example\\demo\\test.xml";
 
     @GetMapping("/allStudents")
     public List<StudentRequest> getAllStudents() {
