@@ -5,7 +5,7 @@ public class StudentRequest {
     private String firstName;
     private String lastName;
     private String gender;
-    private double gpa;
+    private Double gpa;
     private int level;
     private String address;
 
@@ -42,7 +42,7 @@ public class StudentRequest {
     }
 
     public double getGpa() {
-        return gpa;
+        return gpa != null ? gpa : -1;
     }
 
     public void setGpa(double gpa) {
