@@ -581,6 +581,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 
 
     @GetMapping("/sortAndSaveStudents")
+
     public String sortAndSaveStudents(@RequestParam String sortBy, @RequestParam(defaultValue = "asc") String sortOrder) {
         try {
             File xmlFile = new File(XML_FILE_PATH);
@@ -639,9 +640,8 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 
             // Clear existing content
             root.setTextContent("");
-            sortedStudents.sort(Comparator.comparingInt(student -> Integer.parseInt(student.getId())));
 
-            // Append each student element to the document
+            // Append each student element to the document from the sorted list
             for (StudentRequest student : sortedStudents) {
                 Element studentElement = doc.createElement("Student");
                 studentElement.setAttribute("ID", student.getId());
@@ -685,8 +685,6 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             throw new RuntimeException(e);
         }
     }
-
-
 
 
     @DeleteMapping("/deleteById/{id}")
