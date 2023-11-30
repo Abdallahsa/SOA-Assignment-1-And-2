@@ -57,21 +57,23 @@
 				var actionCell = row.insertCell();
 				var updateButton = document.createElement("button");
 				updateButton.innerHTML = "Update";
-				updateButton.onclick = function () {
-					var studentId = row.cells[0].innerHTML; // Assuming the first column contains student ID
-					 window.location.href = "/updateStudent?id=" + studentId;
-				};
+				updateButton.setAttribute("studentId", results[i]["id"]);
+			    updateButton.onclick = function () {
+			        var studentId = this.getAttribute("studentId");
+			        window.location.href = "/updateStudent?id=" + studentId;
+			    };
 				actionCell.appendChild(updateButton);
 
 				// Add "Delete" button for each row
 				var deleteButton = document.createElement("button");
 				deleteButton.innerHTML = "Delete";
 				deleteButton.style.backgroundColor = "red"; 
-				deleteButton.onclick = function () {
-					// Call the deleteStudent function with the correct student ID
-					var studentId = row.cells[0].innerHTML; // Assuming the first column contains student ID
-					deleteStudent(studentId);
-				};
+				
+				deleteButton.setAttribute("studentId", results[i]["id"]);
+			    deleteButton.onclick = function () {
+			        var studentId = this.getAttribute("studentId");
+			        deleteStudent(studentId);
+			    };
 				actionCell.appendChild(deleteButton);
 			}
 

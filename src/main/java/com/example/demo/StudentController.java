@@ -194,7 +194,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     }
 
     if (duplicateIds.isEmpty() && invalidNames.isEmpty() && invalidAddresses.isEmpty() && invalidGenders.isEmpty() && invalidGpas.isEmpty() && invalidLevels.isEmpty() && invalidIds.isEmpty() ) {
-        return "OK";
+        return "Student saved successfully";
     } else {
         StringBuilder sb = new StringBuilder();
         if (!duplicateIds.isEmpty()) {
@@ -399,7 +399,8 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     }
 
     @GetMapping("/searchStudents")
-    public List<StudentRequest> searchStudents(@RequestParam(required = false) String firstName,
+    public List<StudentRequest> searchStudents(	@RequestParam(required = false) String id,
+    											@RequestParam(required = false) String firstName,
                                                 @RequestParam(required = false) String lastName,
                                                 @RequestParam(required = false) String gender,
                                                 @RequestParam(required = false) Double gpa,
@@ -427,10 +428,16 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                 System.out.println(studentElement.getAttribute("ID"));
 
                 // Check if the student matches the search criteria
-                if (matchesSearchCriteria(studentElement, firstName, lastName, gender, gpa, level, address)) {
+                if (matchesSearchCriteria(studentElement, id, firstName, lastName, gender, gpa, level, address)) {
                     // Create a StudentResponse object with the relevant details
                     StudentRequest studentResponse = createStudentResponse(studentElement);
                     matchingStudents.add(studentResponse);
+                }
+                
+                else
+                	
+                {
+                	System.out.println("empty");
                 }
             }
 
@@ -444,17 +451,19 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
         }
     }
 
-    private boolean matchesSearchCriteria(Element studentElement, String firstName, String lastName,
+    private boolean matchesSearchCriteria(Element studentElement, String id, String firstName, String lastName,
                                           String gender, Double gpa, Integer level, String address) {
         // Implement logic to check if the student matches the search criteria
         // You can customize this based on your specific requirements
 
+    	String studentId = studentElement.getAttribute("ID");
         String studentFirstName = getElementValue(studentElement, "FirstName").trim();
         String studentLastName = getElementValue(studentElement, "LastName").trim();
         String studentGender = getElementValue(studentElement, "Gender").trim();
         String studentAddress = getElementValue(studentElement, "Address").trim();
 
-        return (firstName == null || studentFirstName != null && studentFirstName.equalsIgnoreCase(firstName.trim())) &&
+        return (id == null || studentId != null && studentId.equalsIgnoreCase(id.trim())) &&
+        		(firstName == null || studentFirstName != null && studentFirstName.equalsIgnoreCase(firstName.trim())) &&
                 (lastName == null || studentLastName.equalsIgnoreCase(lastName.trim())) &&
                 (gender == null || studentGender.equalsIgnoreCase(gender.trim())) &&
                 (gpa == null || gpa.equals(Double.parseDouble(getElementValue(studentElement, "GPA").trim()))) &&
