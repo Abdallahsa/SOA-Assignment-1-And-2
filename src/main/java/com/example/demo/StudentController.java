@@ -31,8 +31,14 @@ public class StudentController {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(new File(XML_FILE_PATH));
-
+            Document doc;
+            File xmlFile = new File(XML_FILE_PATH);
+            if (xmlFile.exists()) {
+                doc = builder.parse(xmlFile);
+            } else {
+            	return result;
+            }
+            
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
             for (int i = 0; i < studentNodes.getLength(); i++) {
