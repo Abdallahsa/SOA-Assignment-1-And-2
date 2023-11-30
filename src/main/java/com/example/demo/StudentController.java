@@ -198,25 +198,25 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     } else {
         StringBuilder sb = new StringBuilder();
         if (!duplicateIds.isEmpty()) {
-            sb.append("Duplicate IDs: ").append(duplicateIds).append("\n");
+            sb.append("Duplicate IDs for students with ids: ").append(duplicateIds).append("\n").append("ID must be unique");
         }
         if (!invalidNames.isEmpty()) {
-            sb.append("Invalid Names: ").append(invalidNames).append("\n");
+            sb.append("Invalid Names for students with ids: ").append(invalidNames).append("\n").append("first name and last name is characters (a-z) only");
         }
         if (!invalidAddresses.isEmpty()) {
-            sb.append("Invalid Addresses: ").append(invalidAddresses).append("\n");
+            sb.append("Invalid Addresses for students with ids: ").append(invalidAddresses).append("\n").append("first name and last name is characters (a-z) only");
         }
         if(!invalidGenders.isEmpty()){
-            sb.append("Invalid Gender: ").append(invalidGenders).append("\n");
+            sb.append("Invalid Gender for students with ids: ").append(invalidGenders).append("\n");
         }
         if(!invalidGpas.isEmpty()){
-            sb.append("Invalid GPA: ").append(invalidGpas).append("\n");
+            sb.append("Invalid GPA for students with ids: ").append(invalidGpas).append("\n").append("GPA must be between 0 , 4");
         }
         if(!invalidLevels.isEmpty()){
-            sb.append("Invalid Level: ").append(invalidLevels).append("\n");
+            sb.append("Invalid Level for students with ids: ").append(invalidLevels).append("\n");
         }
         if(!invalidIds.isEmpty()){
-            sb.append("Invalid ID: ").append(invalidIds).append("\n");
+            sb.append("Invalid ID for students with ids:").append(invalidIds).append("\n");
         }
 
         return sb.toString();
