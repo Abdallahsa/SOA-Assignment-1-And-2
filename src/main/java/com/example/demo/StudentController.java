@@ -581,14 +581,14 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 
 
     @GetMapping("/sortAndSaveStudents")
-
-    public String sortAndSaveStudents(@RequestParam String sortBy, @RequestParam(defaultValue = "asc") String sortOrder) {
+    public ResponseEntity<List<StudentRequest>> sortAndSaveStudents(
+            @RequestParam String sortBy, @RequestParam(defaultValue = "asc") String sortOrder) {
         try {
             File xmlFile = new File(XML_FILE_PATH);
 
             // Check if the file exists before attempting to parse it
             if (!xmlFile.exists()) {
-                return "No students have been saved yet.";
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
             }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
@@ -611,11 +611,11 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             // Save the sorted content back to the XML file
             saveSortedXml(sortedStudents, doc);
 
-            return "File sorted and saved successfully.";
+            return ResponseEntity.ok(sortedStudents);
 
         } catch (Exception e) {
             e.printStackTrace(); // Add proper logging in a real application
-            return "An error occurred while sorting and saving the file.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
 
