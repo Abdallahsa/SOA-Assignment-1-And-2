@@ -1,63 +1,109 @@
-<!DocType html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<title>All students</title>
-		<link rel="stylesheet" href="searchName.css">
-		<Script>
-	 window.onload = function () 
-		{
-			// Make an AJAX request to your API endpoint
-	        var xhr = new XMLHttpRequest();
-	        xhr.open("GET", "/students/allStudents", true);
-	        xhr.onreadystatechange = function () {
-	            if (xhr.readyState === 4) {
-	                if (xhr.status === 200) {
-	                    // Handle the response, e.g., display the search results
-	                    displaySearchResults(JSON.parse(xhr.responseText));
-	                } else {
-	                    // Handle errors
-	                    alert("Error: " + xhr.statusText);
-	                }
-	            }
-	        };
-	        xhr.send();
-		}
-		
-		 function displaySearchResults(results) {
-		        var resultsDiv = document.getElementById("result");
-		        resultsDiv.innerHTML = ""; // Clear previous results
 
-		        if (results.length === 0) {
-		            resultsDiv.innerHTML = "No students found.";
-		            return;
-		        }
-
-		        var table = document.createElement("table");
-		        table.border = "1";
-
-		        // Create table headers
-		        var headerRow = table.insertRow(0);
-		        for (var key in results[0]) {
-		            var headerCell = headerRow.insertCell();
-		            headerCell.innerHTML = key;
-		        }
-
-		        // Fill in table data
-		        for (var i = 0; i < results.length; i++) {
-		            var row = table.insertRow();
-		            for (var key in results[i]) {
-		                var cell = row.insertCell();
-		                cell.innerHTML = results[i][key];
-		            }
-		        }
-
-		        resultsDiv.appendChild(table);
-		    }
-	</Script>
-	</head>
-	<body>
-		<h1>All Students</h1>
-		<div id=result></div>
-	</body>
-</html>
+<head>
+	<title>All students</title>
+	<link rel="stylesheet" href="searchName.css">
 	
+	<script>
+		window.onload = function () {
+			// Make an AJAX request to your API endpoint
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/students/allStudents", true);
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+					if (xhr.status === 200) {
+						// Handle the response, e.g., display the search results
+						displaySearchResults(JSON.parse(xhr.responseText));
+					} else {
+						// Handle errors
+						alert("Error: " + xhr.statusText);
+					}
+				}
+			};
+			xhr.send();
+		}
+
+		function displaySearchResults(results) {
+			var resultsDiv = document.getElementById("result");
+			resultsDiv.innerHTML = ""; // Clear previous results
+
+			if (results.length === 0) {
+				resultsDiv.innerHTML = "No students found.";
+				return;
+			}
+
+			var table = document.createElement("table");
+			table.border = "1";
+
+			// Create table headers
+			var headerRow = table.insertRow(0);
+			for (var key in results[0]) {
+				var headerCell = headerRow.insertCell();
+				headerCell.innerHTML = key;
+			}
+			// Add an extra cell for the "Delete" column
+			var deleteHeaderCell = headerRow.insertCell();
+			deleteHeaderCell.innerHTML = "Actions";
+
+			// Fill in table data
+			for (var i = 0; i < results.length; i++) {
+				var row = table.insertRow();
+				for (var key in results[i]) {
+					var cell = row.insertCell();
+					cell.innerHTML = results[i][key];
+				}
+				// Add "update" button for each row
+				var actionCell = row.insertCell();
+				var updateButton = document.createElement("button");
+				updateButton.innerHTML = "Update";
+				updateButton.onclick = function () {
+					var studentId = row.cells[0].innerHTML; // Assuming the first column contains student ID
+					 window.location.href = "/updateStudent?id=" + studentId;
+				};
+				actionCell.appendChild(updateButton);
+
+				// Add "Delete" button for each row
+				var deleteButton = document.createElement("button");
+				deleteButton.innerHTML = "Delete";
+				deleteButton.style.backgroundColor = "red"; 
+				deleteButton.onclick = function () {
+					// Call the deleteStudent function with the correct student ID
+					var studentId = row.cells[0].innerHTML; // Assuming the first column contains student ID
+					deleteStudent(studentId);
+				};
+				actionCell.appendChild(deleteButton);
+			}
+
+			resultsDiv.appendChild(table);
+		}
+
+		function deleteStudent(studentId) {
+			console.log("Deleting student with ID: " + studentId);
+			// Make an AJAX request to delete the student by ID
+			var xhr = new XMLHttpRequest();
+			xhr.open("DELETE", "/students/deleteById/" + studentId, true);
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+					if (xhr.status === 200) {
+						// Display the result or handle accordingly
+						alert(xhr.responseText);
+						// Refresh the displayed data after deletion
+						window.location.reload();
+					} else {
+						// Handle errors
+						alert("Error: " + xhr.statusText);
+					}
+				}
+			};
+			xhr.send();
+		}
+	</script>
+</head>
+
+<body>
+<h1>All Students</h1>
+<div id="result"></div>
+</body>
+
+</html>
