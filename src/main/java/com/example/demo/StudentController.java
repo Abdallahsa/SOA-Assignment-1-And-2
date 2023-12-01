@@ -384,9 +384,40 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             return "Invalid GPA for student with ID " + updatedStudent.getId();
         }
 
-        // All validations passed
+        // Update the XML document with the new values
+        if (isNameValid(updatedStudent.getFirstName())) {
+            updateElementValue(studentElement, "FirstName", updatedStudent.getFirstName());
+        }
+
+        if (isNameValid(updatedStudent.getLastName())) {
+            updateElementValue(studentElement, "LastName", updatedStudent.getLastName());
+        }
+
+        if (isAddressValid(updatedStudent.getAddress())) {
+            updateElementValue(studentElement, "Address", updatedStudent.getAddress());
+        }
+
+        // Validate GPA
+        if (isValidGpa(updatedStudent.getGpa())) {
+            updateElementValue(studentElement, "GPA", String.valueOf(updatedStudent.getGpa()));
+        }
+
+        // All validations passed, and XML updated successfully
         return null;
     }
+    private void updateElementValue(Element parentElement, String elementName, String updatedValue) {
+        NodeList nodeList = parentElement.getElementsByTagName(elementName);
+        if (nodeList.getLength() > 0) {
+            nodeList.item(0).setTextContent(updatedValue);
+        } else {
+            // If the element doesn't exist, create a new one
+            Element newElement = parentElement.getOwnerDocument().createElement(elementName);
+            Text textNode = parentElement.getOwnerDocument().createTextNode(updatedValue);
+            newElement.appendChild(textNode);
+            parentElement.appendChild(newElement);
+        }
+    }
+
 
     private boolean isNameValid(String name) {
         return name != null && name.matches("[a-zA-Z]+");
