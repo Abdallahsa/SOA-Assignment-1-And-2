@@ -207,10 +207,10 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
             sb.append("Duplicate IDs for students with ids: ").append(duplicateIds).append("\n").append("ID must be unique");
         }
         if (!invalidNames.isEmpty()) {
-            sb.append("Invalid Names for students with ids: ").append(invalidNames).append("\n").append("first name and last name is characters (a-z) only");
+            sb.append("Invalid Names for students with ids: ").append(invalidNames).append("\n").append("First name and last name are characters (a-z) only");
         }
         if (!invalidAddresses.isEmpty()) {
-            sb.append("Invalid Addresses for students with ids: ").append(invalidAddresses).append("\n").append("first name and last name is characters (a-z) only");
+            sb.append("Invalid Addresses for students with ids: ").append(invalidAddresses).append("\n").append("Address is characters (a-z) only");
         }
         if(!invalidGenders.isEmpty()){
             sb.append("Invalid Gender for students with ids: ").append(invalidGenders).append("\n");
