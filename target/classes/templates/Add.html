@@ -25,26 +25,13 @@
 	    {
 	    	var newForm = document.createElement("div");
 	    	newForm.innerHTML = `<h3>Student ${i} </h3><form id="studentForm${i}">
-
-
 	    	    <input placeholder="Id" type="text" id="id${i}" required><br>
-
-
 	    	    <input placeholder="FirstName" type="text" id="firstName${i}" required><br>
-
-
 	    	    <input placeholder="lastName" type="text" id="lastName${i}" required><br>
-
-
 	    	    <input placeholder="gender"  type="text" id="gender${i}" required><br>
-
-
 	    	    <input placeholder="gpa"  type="number" step="0.01" id="gpa${i}" required><br>
-
 	    		<input placeholder="level"  type="number" step="1" id="level${i}" required><br>
-
 	    	    <input placeholder="address" type="text" id="address${i}" required><br>
-
 	    	</form><br/>`;
 	    	
 	    	container.appendChild(newForm);
@@ -66,27 +53,36 @@
     	
     	for (i = 1;i<= numberOFStudents;i++)
     		{
-    		 	// Get form data
-            	var id = document.getElementById("id"+i).value;
-            	var firstName = document.getElementById("firstName"+i).value;
-           		var lastName = document.getElementById("lastName"+i).value;
-            	var gender = document.getElementById("gender"+i).value;
-            	var gpa = document.getElementById("gpa"+i).value;
-            	var level = document.getElementById("level"+i).value;
-            	var address = document.getElementById("address"+i).value;
+    			if(document.getElementById(`studentForm${i}`).reportValidity())
+    			{
+    				// Get form data
+            		var id = document.getElementById("id"+i).value;
+            		var firstName = document.getElementById("firstName"+i).value;
+           			var lastName = document.getElementById("lastName"+i).value;
+            		var gender = document.getElementById("gender"+i).value;
+            		var gpa = document.getElementById("gpa"+i).value;
+            		var level = document.getElementById("level"+i).value;
+            		var address = document.getElementById("address"+i).value;
 
-            	// Create a JSON object with the form data
-            	var formData = {
-                	id: id,
-                	firstName: firstName,
-                	lastName: lastName,
-                	gender: gender,
-                	gpa: gpa,
-                	level:level,
-                	address: address
-            	};
+            		// Create a JSON object with the form data
+            		var formData = {
+                		id: id,
+                		firstName: firstName,
+                		lastName: lastName,
+                		gender: gender,
+                		gpa: gpa,
+                		level:level,
+                		address: address
+            		};
             	
-            	response.push(formData )
+            	response.push(formData)
+    			}
+    			else
+    			{
+    				response = []
+    				return;
+    			}
+    		 	
     		}
        	
     	
@@ -103,10 +99,6 @@
         };
         xhr.send(JSON.stringify(response)); // Send as an array to match your API endpoint
 
-        // Alternatively, you can use a library like jQuery for AJAX requests
-        // $.post("/students/saveStudents", formData, function(data) {
-        //     alert(data);
-        // });
     }
 </script>
 </body>

@@ -4,12 +4,42 @@
 <head>
 	<title>All students</title>
 	<link rel="stylesheet" href="searchName.css">
+</head>
+
+<body>
+	<h2>All Students Sorted Based on a Specific Attribute</h2>
+	<div>
+	<span>Choose the attribute you want to sort with: </span>
+		<select id="sortAttribute">
+			<option value="id">ID</option>
+			<option value="firstname">First Name</option>
+			<option value="lastname">Last Name</option>
+			<option value="gender">Gender</option>
+			<option value="gpa">GPA</option>
+			<option value="level">Level</option>
+			<option value="address">Address</option>
+		</select>
+		
+		<span>Choose the sorting order: </span>
+		<select id="sortOrder">
+			<option value="asc">Ascending</option>
+			<option value="desc">Descending</option>
+		</select>
+		
+		<button type="button" onclick="getSortedStudents()">Sort</button>
+	</div>
 	
-	<script>
-		window.onload = function () {
-			// Make an AJAX request to your API endpoint
+	<div id="result">
+	</div>
+	
+	<Script>
+		function getSortedStudents()
+		{
+			var sortAttribute = document.getElementById("sortAttribute").value
+			var sortOrder = document.getElementById("sortOrder").value
+			
 			var xhr = new XMLHttpRequest();
-			xhr.open("GET", "/students/allStudents", true);
+			xhr.open("GET", "/students/sortAndSaveStudents?sortBy="+sortAttribute+"&sortOrder="+sortOrder, true);
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
@@ -23,7 +53,7 @@
 			};
 			xhr.send();
 		}
-
+		
 		function displaySearchResults(results) {
 			var resultsDiv = document.getElementById("result");
 			resultsDiv.innerHTML = ""; // Clear previous results
@@ -79,7 +109,7 @@
 
 			resultsDiv.appendChild(table);
 		}
-
+		
 		function deleteStudent(studentId) {
 			console.log("Deleting student with ID: " + studentId);
 			// Make an AJAX request to delete the student by ID
@@ -100,12 +130,9 @@
 			};
 			xhr.send();
 		}
-	</script>
-</head>
-
-<body>
-<h1>All Students</h1>
-<div id="result"></div>
-</body>
-
+		
+		
+		
+	</Script>
+</body>	
 </html>

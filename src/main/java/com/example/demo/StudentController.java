@@ -31,8 +31,14 @@ public class StudentController {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
-            Document doc = builder.parse(new File(XML_FILE_PATH));
-
+            Document doc;
+            File xmlFile = new File(XML_FILE_PATH);
+            if (xmlFile.exists()) {
+                doc = builder.parse(xmlFile);
+            } else {
+            	return result;
+            }
+            
             NodeList studentNodes = doc.getElementsByTagName("Student");
 
             for (int i = 0; i < studentNodes.getLength(); i++) {
@@ -194,29 +200,29 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     }
 
     if (duplicateIds.isEmpty() && invalidNames.isEmpty() && invalidAddresses.isEmpty() && invalidGenders.isEmpty() && invalidGpas.isEmpty() && invalidLevels.isEmpty() && invalidIds.isEmpty() ) {
-        return "OK";
+        return "Student saved successfully";
     } else {
         StringBuilder sb = new StringBuilder();
         if (!duplicateIds.isEmpty()) {
-            sb.append("Duplicate IDs: ").append(duplicateIds).append("\n");
+            sb.append("Duplicate IDs for students with ids: ").append(duplicateIds).append("\n").append("ID must be unique");
         }
         if (!invalidNames.isEmpty()) {
-            sb.append("Invalid Names: ").append(invalidNames).append("\n");
+            sb.append("Invalid Names for students with ids: ").append(invalidNames).append("\n").append("first name and last name is characters (a-z) only");
         }
         if (!invalidAddresses.isEmpty()) {
-            sb.append("Invalid Addresses: ").append(invalidAddresses).append("\n");
+            sb.append("Invalid Addresses for students with ids: ").append(invalidAddresses).append("\n").append("first name and last name is characters (a-z) only");
         }
         if(!invalidGenders.isEmpty()){
-            sb.append("Invalid Gender: ").append(invalidGenders).append("\n");
+            sb.append("Invalid Gender for students with ids: ").append(invalidGenders).append("\n");
         }
         if(!invalidGpas.isEmpty()){
-            sb.append("Invalid GPA: ").append(invalidGpas).append("\n");
+            sb.append("Invalid GPA for students with ids: ").append(invalidGpas).append("\n").append("GPA must be between 0 , 4");
         }
         if(!invalidLevels.isEmpty()){
-            sb.append("Invalid Level: ").append(invalidLevels).append("\n");
+            sb.append("Invalid Level for students with ids: ").append(invalidLevels).append("\n");
         }
         if(!invalidIds.isEmpty()){
-            sb.append("Invalid ID: ").append(invalidIds).append("\n");
+            sb.append("Invalid ID for students with ids:").append(invalidIds).append("\n");
         }
 
         return sb.toString();
@@ -399,7 +405,8 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     }
 
     @GetMapping("/searchStudents")
-    public List<StudentRequest> searchStudents(@RequestParam(required = false) String firstName,
+    public List<StudentRequest> searchStudents(	@RequestParam(required = false) String id,
+    											@RequestParam(required = false) String firstName,
                                                 @RequestParam(required = false) String lastName,
                                                 @RequestParam(required = false) String gender,
                                                 @RequestParam(required = false) Double gpa,
@@ -427,10 +434,16 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
                 System.out.println(studentElement.getAttribute("ID"));
 
                 // Check if the student matches the search criteria
-                if (matchesSearchCriteria(studentElement, firstName, lastName, gender, gpa, level, address)) {
+                if (matchesSearchCriteria(studentElement, id, firstName, lastName, gender, gpa, level, address)) {
                     // Create a StudentResponse object with the relevant details
                     StudentRequest studentResponse = createStudentResponse(studentElement);
                     matchingStudents.add(studentResponse);
+                }
+                
+                else
+                	
+                {
+                	System.out.println("empty");
                 }
             }
 
@@ -444,17 +457,19 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
         }
     }
 
-    private boolean matchesSearchCriteria(Element studentElement, String firstName, String lastName,
+    private boolean matchesSearchCriteria(Element studentElement, String id, String firstName, String lastName,
                                           String gender, Double gpa, Integer level, String address) {
         // Implement logic to check if the student matches the search criteria
         // You can customize this based on your specific requirements
 
+    	String studentId = studentElement.getAttribute("ID");
         String studentFirstName = getElementValue(studentElement, "FirstName").trim();
         String studentLastName = getElementValue(studentElement, "LastName").trim();
         String studentGender = getElementValue(studentElement, "Gender").trim();
         String studentAddress = getElementValue(studentElement, "Address").trim();
 
-        return (firstName == null || studentFirstName != null && studentFirstName.equalsIgnoreCase(firstName.trim())) &&
+        return (id == null || studentId != null && studentId.equalsIgnoreCase(id.trim())) &&
+        		(firstName == null || studentFirstName != null && studentFirstName.equalsIgnoreCase(firstName.trim())) &&
                 (lastName == null || studentLastName.equalsIgnoreCase(lastName.trim())) &&
                 (gender == null || studentGender.equalsIgnoreCase(gender.trim())) &&
                 (gpa == null || gpa.equals(Double.parseDouble(getElementValue(studentElement, "GPA").trim()))) &&
