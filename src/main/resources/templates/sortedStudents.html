@@ -44,7 +44,9 @@
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
 						// Handle the response, e.g., display the search results
+						console.log(xhr.responseText)
 						displaySearchResults(JSON.parse(xhr.responseText));
+					
 					} else {
 						// Handle errors
 						alert("Error: " + xhr.statusText);
