@@ -50,5 +50,11 @@ public class PageController
 		 model.addAttribute("studentId", studentId);
 		return "updateStudent";
 	}
+	
+	@GetMapping("/sortedStudents")
+	public String sortedStudents()
+	{
+		return "sortedStudents";
+	}
 
 }
