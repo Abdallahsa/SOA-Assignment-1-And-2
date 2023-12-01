@@ -343,7 +343,12 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 
                 if (studentElement.getAttribute("ID").equals(id)) {
                     // Update the student attributes
-                    updateStudentAttributes(studentElement, updatedStudent);
+                    String validationMessage = updateStudentAttributes(studentElement, updatedStudent);
+
+                    if (validationMessage != null) {
+                        // Validation failed, return the specific message
+                        return validationMessage;
+                    }
 
                     // Save the updated XML without introducing extra spaces
                     saveUpdatedXml(doc);
@@ -360,48 +365,39 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
         }
     }
 
-    private void updateStudentAttributes(Element studentElement, StudentRequest updatedStudent) {
+    private String updateStudentAttributes(Element studentElement, StudentRequest updatedStudent) {
         // Update only the provided attributes
-        if (updatedStudent.getFirstName() != null) {
-            updateElementValue(studentElement, "FirstName", updatedStudent.getFirstName());
-        }
-        if (updatedStudent.getLastName() != null) {
-            updateElementValue(studentElement, "LastName", updatedStudent.getLastName());
-        }
-        if (updatedStudent.getGender() != null) {
-            updateElementValue(studentElement, "Gender", updatedStudent.getGender());
-        }
-        if (!String.valueOf(updatedStudent.getGpa()).isEmpty()  ) {
-            if(updatedStudent.getGpa()>=0 && updatedStudent.getGpa()<=4){
-                updateElementValue(studentElement, "GPA", String.valueOf(updatedStudent.getGpa()));
-            }
-
-        }
-// Check if level is provided; if not, preserve the existing value
-        if (!String.valueOf(updatedStudent.getLevel()).isEmpty()) {
-            // Validate level and update if valid
-            if (updatedStudent.getLevel() >= 1 && updatedStudent.getLevel() <= 4) {
-                updateElementValue(studentElement, "Level", String.valueOf(updatedStudent.getLevel()));
-            }
-        }
-        if (updatedStudent.getAddress() != null) {
-            updateElementValue(studentElement, "Address", updatedStudent.getAddress());
+        if (!isNameValid(updatedStudent.getFirstName())) {
+            return "Invalid First Name for student with ID " + updatedStudent.getId();
         }
 
+        if (!isNameValid(updatedStudent.getLastName())) {
+            return "Invalid Last Name for student with ID " + updatedStudent.getId();
+        }
+
+        if (!isAddressValid(updatedStudent.getAddress())) {
+            return "Invalid Address for student with ID " + updatedStudent.getId();
+        }
+
+        // Validate GPA
+        if (!isValidGpa(updatedStudent.getGpa())) {
+            return "Invalid GPA for student with ID " + updatedStudent.getId();
+        }
+
+        // All validations passed
+        return null;
     }
 
+    private boolean isNameValid(String name) {
+        return name != null && name.matches("[a-zA-Z]+");
+    }
 
-    private void updateElementValue(Element parentElement, String elementName, String updatedValue) {
-        NodeList nodeList = parentElement.getElementsByTagName(elementName);
-        if (nodeList.getLength() > 0) {
-            nodeList.item(0).setTextContent(updatedValue);
-        } else {
-            // If the element doesn't exist, create a new one
-            Element newElement = parentElement.getOwnerDocument().createElement(elementName);
-            Text textNode = parentElement.getOwnerDocument().createTextNode(updatedValue);
-            newElement.appendChild(textNode);
-            parentElement.appendChild(newElement);
-        }
+    private boolean isAddressValid(String address) {
+        return address != null && address.matches("[a-zA-Z]+");
+    }
+
+    private boolean isValidGpa(Double gpa) {
+        return gpa != null && gpa >= 0 && gpa <= 4;
     }
 
     @GetMapping("/searchStudents")
