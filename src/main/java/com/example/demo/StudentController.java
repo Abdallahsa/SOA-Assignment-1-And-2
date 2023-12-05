@@ -401,8 +401,14 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
         if (isValidGpa(updatedStudent.getGpa())) {
             updateElementValue(studentElement, "GPA", String.valueOf(updatedStudent.getGpa()));
         }
+        // Validate and update level
+        if (!isLevelValid(String.valueOf(updatedStudent.getLevel()))) {
+            return "Invalid Level for student with ID " + updatedStudent.getId();
+        }
 
-        // All validations passed, and XML updated successfully
+        if (isLevelValid(String.valueOf(updatedStudent.getLevel()))) {
+            updateElementValue(studentElement, "Level", String.valueOf(updatedStudent.getLevel()));
+        }
         return null;
     }
     private void updateElementValue(Element parentElement, String elementName, String updatedValue) {
@@ -430,6 +436,11 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     private boolean isValidGpa(Double gpa) {
         return gpa != null && gpa >= 0 && gpa <= 4;
     }
+    private boolean isLevelValid(String level) {
+        return level != null && !level.trim().isEmpty() && level.matches("[a-zA-Z0-9]+");
+    }
+
+
 
     @GetMapping("/searchStudents")
     public List<StudentRequest> searchStudents(	@RequestParam(required = false) String id,
