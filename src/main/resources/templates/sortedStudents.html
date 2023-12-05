@@ -3,7 +3,7 @@
 
 <head>
 	<title>All students</title>
-	<link rel="stylesheet" href="searchName.css">
+	 <link rel="stylesheet" href="forms.css">
 </head>
 
 <body>
@@ -44,7 +44,6 @@
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
 						// Handle the response, e.g., display the search results
-						console.log(xhr.responseText)
 						displaySearchResults(JSON.parse(xhr.responseText));
 					
 					} else {
@@ -69,14 +68,17 @@
 			table.border = "1";
 
 			// Create table headers
-			var headerRow = table.insertRow(0);
+			var headerRow = table.createTHead().insertRow(0);
 			for (var key in results[0]) {
-				var headerCell = headerRow.insertCell();
+				var headerCell = document.createElement("th");
 				headerCell.innerHTML = key;
+				headerRow.appendChild(headerCell);
+			
 			}
 			// Add an extra cell for the "Delete" column
-			var deleteHeaderCell = headerRow.insertCell();
+			var deleteHeaderCell = document.createElement("th"); 
 			deleteHeaderCell.innerHTML = "Actions";
+			headerRow.appendChild(deleteHeaderCell);
 
 			// Fill in table data
 			for (var i = 0; i < results.length; i++) {
