@@ -641,7 +641,7 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
 
             // Check if the file exists before attempting to parse it
             if (!xmlFile.exists()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+                return ResponseEntity.ok(Collections.emptyList());
             }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
