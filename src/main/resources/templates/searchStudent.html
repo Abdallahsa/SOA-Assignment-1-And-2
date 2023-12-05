@@ -51,6 +51,7 @@
 
 <!-- Display search results in a table -->
 <h3>Search Results</h3>
+<div>Number of found students:  <span id=length>0</span> students</div>
 <table id="searchResults"></table>
 <p id="noResults">No results found.</p>
 
@@ -62,7 +63,6 @@
 
         function searchStudents() {
             var formData = $('#searchForm').serialize();
-            console.log(formData)
             $.ajax({
                 type: 'GET',
                 url: '/students/searchStudents',
@@ -82,8 +82,11 @@
 
             table.empty();
             noResults.hide();
+            document.getElementById("length").innerHTML= 0
+           
 
             if (data.length > 0) {
+            	document.getElementById("length").innerHTML= data.length
                 // Add table headers dynamically based on the data
                 var headers = '<thead><tr>';
                 for (var key in data[0]) {
