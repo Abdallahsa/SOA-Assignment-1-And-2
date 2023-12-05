@@ -43,18 +43,24 @@ public class PageController
 	{
 		return "viewAllStudents";
 	}
-	
+
+	@GetMapping("/sortedStudents")
+	public String sortedStudents()
+	{
+		return "sortedStudents";
+	}
+
 	@GetMapping("/updateStudent")
 	public String updateStudent(@RequestParam(name = "id") String studentId, Model model)
 	{
 		 model.addAttribute("studentId", studentId);
 		return "updateStudent";
 	}
-	
-	@GetMapping("/sortedStudents")
-	public String sortedStudents()
+
+	@GetMapping("/searchstudent")
+	public String searchstudent()
 	{
-		return "sortedStudents";
+		return "SearchStudent";
 	}
 
 }
