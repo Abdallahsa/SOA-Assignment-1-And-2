@@ -409,6 +409,11 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
         if (isLevelValid(String.valueOf(updatedStudent.getLevel()))) {
             updateElementValue(studentElement, "Level", String.valueOf(updatedStudent.getLevel()));
         }
+
+        if (updatedStudent.getGender() != null) {
+            updateElementValue(studentElement, "Gender", String.valueOf(updatedStudent.getGender()));
+        }
+
         return null;
     }
     private void updateElementValue(Element parentElement, String elementName, String updatedValue) {
@@ -439,7 +444,6 @@ public String saveStudents(@RequestBody List<StudentRequest> studentRequests) {
     private boolean isLevelValid(String level) {
         return level != null && !level.trim().isEmpty() && level.matches("[a-zA-Z0-9]+");
     }
-
 
 
     @GetMapping("/searchStudents")

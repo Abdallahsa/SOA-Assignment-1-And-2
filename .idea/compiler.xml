@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="soa" />
+        <module name="SOA-Assignment-1-And-2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.6" />
@@ -15,6 +16,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="SOA-Assignment-1" options="-parameters" />
+      <module name="SOA-Assignment-1-And-2" options="-parameters" />
       <module name="demo1" options="-parameters" />
       <module name="soa" options="-parameters" />
     </option>
