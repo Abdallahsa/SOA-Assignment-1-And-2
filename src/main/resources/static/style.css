@@ -1,5 +1,8 @@
 body{
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
     
 }
 .landing-page{
@@ -21,14 +24,13 @@ body{
     z-index: 2;
     display: flex;
     padding: 8px;
-
-
-
+    background-color:black;
 }
 .header-area .logo{
     width: 300px;
     padding: 15px;
     font-weight: bold;
+    color:white;
 }
 .links{
     list-style: none;
@@ -36,23 +38,28 @@ body{
     text-align: right;
     padding-right: 20px;
     font-size: 15px;
+    background-color:black;
+    
 
 }
 .links li{
     display: inline-block;
     margin-left: 10px;
 }
+
 .links li a{
     text-decoration: none;
-    color:black;
-    border-bottom:2px solid white;
+    color:white;
+    border-bottom:2px solid black;
+    font-weight:700;
 }
 
 .links li a:hover{
-   border-bottom:2px solid black;
+   border-bottom:2px solid white;
+   color:white;
 }
 .links li a:hover, .links li a.active {
-    color:var(--main-color);
+   /* color:var(--main-color);*/
     transition: 1s;
 
 }
@@ -65,6 +72,7 @@ body{
     text-align: center;
     margin-top: 10px;
     width: 95%;
+    color: #45a049;
 }
 
 @media (max-width:575px){

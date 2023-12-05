@@ -5,90 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Students</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        h2 {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            margin: 20px auto;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 5px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="button"] {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        input[type="button"]:hover {
-            background-color: #45a049;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #4caf50;
-            color: #fff;
-        }
-
-        p {
-            color: #888;
-            margin-top: 20px;
-            display: none;
-        }
-
-        #noResults {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="forms.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
@@ -97,9 +14,11 @@
 
 <form id="searchForm">
     <label for="id"><input type="checkbox" name="searchId" value="true" onclick="toggleInput('id')"> ID</label>
-    <label for="level"><input type="checkbox" name="searchLevel" value="true" onclick="toggleInput('level')"> Level</label>
     <label for="firstName"><input type="checkbox" name="searchFirstName" value="true" onclick="toggleInput('firstName')"> First Name</label>
     <label for="lastName"><input type="checkbox" name="searchLastName" value="true" onclick="toggleInput('lastName')"> Last Name</label>
+    <label for="gender"><input type="checkbox" name="searchGender" value="true" onclick="toggleInput('gender')"> Gender</label>
+    <label for="gpa"><input type="checkbox" name="searchGpa" value="true" onclick="toggleInput('gpa')"> Gpa</label>
+    <label for="level"><input type="checkbox" name="searchLevel" value="true" onclick="toggleInput('level')"> Level</label>
     <label for="address"><input type="checkbox" name="searchAddress" value="true" onclick="toggleInput('address')"> Address</label>
 
     <br>
@@ -107,14 +26,20 @@
     <label for="id">ID: </label>
     <input type="text" name="id" id="id" disabled>
 
-    <label for="level">Level: </label>
-    <input type="text" name="level" id="level" disabled>
-
     <label for="firstName">First Name: </label>
     <input type="text" name="firstName" id="firstName" disabled>
 
     <label for="lastName">Last Name: </label>
     <input type="text" name="lastName" id="lastName" disabled>
+    
+    <label for="gender">Gender: </label>
+    <input type="text" name="gender" id="gender" disabled>
+    
+    <label for="gpa">Gpa: </label>
+    <input type="number" name="gpa" id="gpa" disabled>
+    
+    <label for="level">Level: </label>
+    <input type="number" name="level" id="level" disabled>
 
     <label for="address">Address: </label>
     <input type="text" name="address" id="address" disabled>
@@ -126,6 +51,7 @@
 
 <!-- Display search results in a table -->
 <h3>Search Results</h3>
+<div>Number of found students:  <span id=length>0</span> students</div>
 <table id="searchResults"></table>
 <p id="noResults">No results found.</p>
 
@@ -156,8 +82,11 @@
 
             table.empty();
             noResults.hide();
+            document.getElementById("length").innerHTML= 0
+           
 
             if (data.length > 0) {
+            	document.getElementById("length").innerHTML= data.length
                 // Add table headers dynamically based on the data
                 var headers = '<thead><tr>';
                 for (var key in data[0]) {
